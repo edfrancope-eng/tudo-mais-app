@@ -1,0 +1,82 @@
+# Configuração .htaccess para Tudo Mais na HostGator
+# Coloque este arquivo na raiz do seu subdomínio (ex: app.seudominio.com.br)
+
+RewriteEngine On
+
+# Configurações de segurança
+Header always set X-Content-Type-Options nosniff
+Header always set X-Frame-Options DENY
+Header always set X-XSS-Protection "1; mode=block"
+
+# Configurações de cache para arquivos estáticos
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresByType text/css "access plus 1 year"
+    ExpiresByType application/javascript "access plus 1 year"
+    ExpiresByType image/png "access plus 1 year"
+    ExpiresByType image/jpg "access plus 1 year"
+    ExpiresByType image/jpeg "access plus 1 year"
+    ExpiresByType image/gif "access plus 1 year"
+    ExpiresByType image/svg+xml "access plus 1 year"
+</IfModule>
+
+# Compressão GZIP
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/plain
+    AddOutputFilterByType DEFLATE text/html
+    AddOutputFilterByType DEFLATE text/xml
+    AddOutputFilterByType DEFLATE text/css
+    AddOutputFilterByType DEFLATE application/xml
+    AddOutputFilterByType DEFLATE application/xhtml+xml
+    AddOutputFilterByType DEFLATE application/rss+xml
+    AddOutputFilterByType DEFLATE application/javascript
+    AddOutputFilterByType DEFLATE application/x-javascript
+</IfModule>
+
+# Redirecionar HTTP para HTTPS (se SSL estiver configurado)
+RewriteCond %{HTTPS} off
+RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# Configuração para aplicação React + Flask
+# Servir arquivos estáticos do frontend
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+
+# Redirecionar requisições da API para o backend Python
+# IMPORTANTE: Ajuste a porta conforme configurado no "Setup Python App"
+RewriteRule ^api/(.*)$ http://127.0.0.1:PORTA_PYTHON/api/$1 [P,L]
+# Substitua PORTA_PYTHON pela porta que o cPanel gerou para sua aplicação Python
+
+# Redirecionar webhooks para o backend
+RewriteRule ^webhook/(.*)$ http://127.0.0.1:PORTA_PYTHON/webhook/$1 [P,L]
+
+# Para todas as outras requisições, servir o index.html do React
+RewriteRule ^ /frontend/index.html [L]
+
+# Configurações de upload
+<Files "*.php">
+    Order Deny,Allow
+    Deny from all
+</Files>
+
+# Proteger arquivos sensíveis
+<Files ~ "^\.">
+    Order allow,deny
+    Deny from all
+</Files>
+
+<Files ~ "(config|requirements|\.py)$">
+    Order allow,deny
+    Deny from all
+</Files>
+
+# Configurações de MIME types
+AddType application/javascript .js
+AddType text/css .css
+AddType image/svg+xml .svg
+
+# Configurações de erro personalizadas
+ErrorDocument 404 /frontend/index.html
+ErrorDocument 500 "Erro interno do servidor. Entre em contato com tudomaisapp@hotmail.com"
+
