@@ -41,7 +41,7 @@ def create_app():
 
     return app
 
-# Criar a instância do aplicativo
+# Criar a instância do aplicativo para que Gunicorn possa encontrá-la
 app = create_app()
 
 # Adicionar rota de webhook diretamente ao app principal
