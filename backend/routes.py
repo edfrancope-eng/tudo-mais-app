@@ -837,6 +837,7 @@ def initiate_subscription(plan_type):
     return jsonify(subscription_data), 200
 
 # Webhook do PagSeguro
+# Rota para webhook do PagSeguro
 @app.route("/webhook/pagseguro", methods=["POST"])
 def pagseguro_webhook():
     """Recebe notificações automáticas do PagSeguro"""
@@ -1289,4 +1290,8 @@ def get_admin_notifications():
         "beta_mode": is_beta_mode(),
         "last_updated": datetime.utcnow().isoformat()
     }), 200
+
+
+#o
+
 
