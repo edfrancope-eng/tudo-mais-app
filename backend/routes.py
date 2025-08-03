@@ -768,7 +768,7 @@ def get_top10_recent():
 
 # Importar configurações PagSeguro
 from pagseguro_config import get_all_plans, get_plan_config, get_plan_price
-from webhook_handler import PagSeguroWebhookHandler
+# from webhook_handler import PagSeguroWebhookHandler
 import os
 from werkzeug.utils import secure_filename
 
@@ -838,26 +838,73 @@ def initiate_subscription(plan_type):
 
 # Webhook do PagSeguro
 # Rota para webhook do PagSeguro
-@app.route("/webhook/pagseguro", methods=["POST"])
-def pagseguro_webhook():
-    """Recebe notificações automáticas do PagSeguro"""
-    try:
-        # Verificar se é uma requisição válida
-        signature = request.headers.get('X-PagSeguro-Signature')
-        if not signature:
-            return jsonify({"error": "Assinatura não encontrada"}), 400
 
-        webhook_data = request.get_json()
-        if not webhook_data:
-            return jsonify({"error": "Dados não encontrados"}), 400
-
-        # Processar webhook
-        result, status_code = PagSeguroWebhookHandler.process_webhook(webhook_data)
-        
-        return jsonify(result), status_code
-
-    except Exception as e:
-        return jsonify({"error": f"Erro no webhook: {str(e)}"}), 500
+# @app.route("/webhook/pagseguro", methods=["POST"])
+# def pagseguro_webhook():
+#     """Recebe notificações automáticas do PagSeguro"""
+#     # try:
+#     #     # Verificar se é uma requisição válida
+#     #     # signature = request.headers.get("X-PagSeguro-Signature")
+#     #     # if not signature:
+#     #     #     return jsonify({"error": "Assinatura não encontrada"}), 400
+#     #
+#     #     # webhook_data = request.get_json()
+#     #     # if not webhook_data:
+#     #     #     return jsonify({"error": "Dados não encontrados"}), 400
+#     #
+#     #     # # Validar a assinatura do PagSeguro
+#     #     # # if not pagseguro_config.validate_signature(signature, request.data):
+#     #     # #     return jsonify({"error": "Assinatura inválida"}), 403
+#     #
+#     #     # # Processar a notificação
+#     #     # notification_code = webhook_data.get("notificationCode")
+#     #     # notification_type = webhook_data.get("notificationType")
+#     #
+#     #     # if notification_type == "transaction":
+#     #     #     # Buscar detalhes da transação no PagSeguro
+#     #     #     transaction_details = pagseguro_config.get_transaction_details(notification_code)
+#     #
+#     #     #     if transaction_details:
+#     #     #         transaction_status = transaction_details.get("status")
+#     #     #         reference = transaction_details.get("reference")
+#     #
+#     #     #         # O reference deve ser o advertiser_id
+#     #     #         if reference:
+#     #     #             advertiser_id = int(reference)
+#     #     #             advertiser = Advertiser.query.get(advertiser_id)
+#     #
+#     #     #             if advertiser:
+#     #     #                 # Mapear status do PagSeguro para status internos
+#     #     #                 if transaction_status == "PAID": # Exemplo: Pago
+#     #     #                     # Ativar ou atualizar assinatura
+#     #     #                     advertiser.is_active = True
+#     #     #                     # Lógica para definir o plano e a data de expiração com base no produto/plano do PagSeguro
+#     #     #                     # Por simplicidade, vamos assumir que a transação é para um plano mensal
+#     #     #                     advertiser.subscription_plan = SubscriptionPlan.MONTHLY
+#     #     #                     advertiser.subscription_start = datetime.utcnow()
+#     #     #                     advertiser.subscription_end = datetime.utcnow() + timedelta(days=30)
+#     #     #                     db.session.commit()
+#     #     #                     print(f"Anunciante {advertiser_id} ativado/atualizado com sucesso.")
+#     #     #                 elif transaction_status == "CANCELLED": # Exemplo: Cancelado
+#     #     #                     advertiser.is_active = False
+#     #     #                     db.session.commit()
+#     #     #                     print(f"Anunciante {advertiser_id} desativado devido a cancelamento.")
+#     #     #                 # Outros status como PENDING, IN_DISPUTE, etc.
+#     #
+#     #     # return jsonify(status="success"), 200
+#     # except Exception as e:
+#     #     db.session.rollback()
+#     #     return jsonify({"error": str(e)}), 500
+#         if not webhook_data:
+#             return jsonify({"error": "Dados não encontrados"}), 400
+#
+#         # Processar webhook
+#         result, status_code = PagSeguroWebhookHandler.process_webhook(webhook_data)
+#         
+#         return jsonify(result), status_code
+#
+#     except Exception as e:
+#         return jsonify({"error": f"Erro no webhook: {str(e)}"}), 500
 
 # Rota para verificar status da assinatura
 @advertiser_bp.route("/subscription-status", methods=["GET"])
