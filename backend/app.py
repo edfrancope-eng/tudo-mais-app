@@ -45,34 +45,34 @@ def create_app():
 app = create_app()
 
 # Adicionar rota de webhook diretamente ao app principal
-from webhook_handler import PagSeguroWebhookHandler
-@app.route("/webhook/pagseguro", methods=["POST"])
-def pagseguro_webhook():
-    try:
-        # Verificar se é uma requisição válida
-        signature = request.headers.get("X-PagSeguro-Signature")
-        if not signature:
-            return jsonify({"error": "Assinatura não encontrada"}), 400
-
-        webhook_data = request.get_json()
-        if not webhook_data:
-            return jsonify({"error": "Dados não encontrados"}), 400
-
-        # Processar webhook
-        result, status_code = PagSeguroWebhookHandler.process_webhook(webhook_data)
-        
-        return jsonify(result), status_code
-
-    except Exception as e:
-        return jsonify({"error": f"Erro no webhook: {str(e)}"}), 500
+# from webhook_handler import PagSeguroWebhookHandler
+# @app.route("/webhook/pagseguro", methods=["POST"])
+# def pagseguro_webhook():
+#     try:
+#         # Verificar se é uma requisição válida
+#         signature = request.headers.get("X-PagSeguro-Signature")
+#         if not signature:
+#             return jsonify({"error": "Assinatura não encontrada"}), 400
+#
+#         webhook_data = request.get_json()
+#         if not webhook_data:
+#             return jsonify({"error": "Dados não encontrados"}), 400
+#
+#         # Processar webhook
+#         result, status_code = PagSeguroWebhookHandler.process_webhook(webhook_data)
+#         
+#         return jsonify(result), status_code
+#
+#     except Exception as e:
+#         return jsonify({"error": f"Erro no webhook: {str(e)}"}), 500
 
 # Rota para página de sucesso após pagamento
-@app.route("/subscription-success", methods=["GET"])
-def subscription_success():
-    return jsonify({
-        "message": "Pagamento processado! Você receberá uma confirmação por email em breve.",
-        "redirect_url": f"{request.host_url}dashboard"
-    }), 200
+# @app.route("/subscription-success", methods=["GET"])
+# def subscription_success():
+#     return jsonify({
+#         "message": "Pagamento processado! Você receberá uma confirmação por email em breve.",
+#         "redirect_url": f"{request.host_url}dashboard"
+#     }), 200
 
 # Não rodar o app diretamente se estiver sendo importado pelo Passenger
 if __name__ == "__main__":
