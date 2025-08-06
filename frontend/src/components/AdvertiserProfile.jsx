@@ -16,7 +16,7 @@ const AdvertiserProfile = () => {
 
   const fetchAdvertiser = async () => {
     try {
-      const response = await fetch(`http://localhost:5000/advertiser/${id}`)
+      const response = await fetch(`https://tudo-mais-app-production.up.railway.app/advertiser/${id}`)
       if (response.ok) {
         const data = await response.json()
         setAdvertiser(data)
