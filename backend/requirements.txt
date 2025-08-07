@@ -16,3 +16,6 @@ gunicorn
 
 Flask-Migrate
 
+
+Flask-Cors==4.0.1
+
