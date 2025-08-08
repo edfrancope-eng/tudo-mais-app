@@ -44,7 +44,7 @@ def create_app():
 # Criar a instância do aplicativo para que Gunicorn possa encontrá-la
 app = create_app()
 
-CORS(app, resources={r"/*": {"origins": "https://tudo-mais-app.vercel.app"}})
+CORS(app, origins=["https://tudo-mais-app.vercel.app"])
 
 # Adicionar rota de webhook diretamente ao app principal
 # from webhook_handler import PagSeguroWebhookHandler
